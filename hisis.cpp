@@ -79,13 +79,16 @@ const char * HiSIS::getDefaultName()
 
 bool HiSIS::Connect()
 {
+	DEBUG(INDI::Logger::DBG_DEBUG, "within HiSIS::Connect");
 	DEBUG(INDI::Logger::DBG_SESSION, "Attempting to find the CCD...");
+	// Here we look for the ccd
 	DEBUG(INDI::Logger::DBG_SESSION, "CCD found, retrieving data.");
 	return true;
 }
 
 bool HiSIS::Disconnect()
 {
+	DEBUG(INDI::Logger::DBG_DEBUG, "within HiSIS::Disconnect");
 	DEBUG(INDI::Logger::DBG_SESSION, "Disconnected successfully!");
 	return true;
 }
@@ -94,20 +97,31 @@ void HiSIS::ISGetProperties(const char *dev)
 {
 	INDI::CCD::ISGetProperties(dev);
 
-	defineText(&PortTP);
+	defineSwitch(&ConnSP);
+	defineSwitch(&PortSP);
 }
 
-bool HiSIS::initProperties() {
-	// Init parent properties first
+bool HiSIS::initProperties()
+{
+	// Init parent properties first -> FIXME why?
 	INDI::CCD::initProperties();
 
-	IUFillText(&PortT[0], "PORT", "Port", "0x378");
-	IUFillTextVector(&PortTP, PortT, 1, getDeviceName(), "DEVICE_PORT", "Ports", MAIN_CONTROL_TAB, IP_RW, 0, IPS_IDLE);
+	addDebugControl();
+
+	IUFillSwitch(&ConnS[0], "PP8", "PP8 (LPT)", ISS_ON);
+	IUFillSwitch(&ConnS[1], "PC16", "PC16 (ISA)", ISS_OFF);
+	IUFillSwitchVector(&ConnSP, ConnS, NARRAY(ConnS), getDeviceName(), "DEVICE_CONN", "Connector", MAIN_CONTROL_TAB, IP_RW, ISR_1OFMANY, 0, IPS_IDLE);
+	IUFillSwitch(&PortS[0], "0x3bc", "", ISS_ON);
+	IUFillSwitch(&PortS[1], "0x378", "", ISS_OFF);
+	IUFillSwitch(&PortS[2], "0x278", "", ISS_OFF);
+	IUFillSwitchVector(&PortSP, PortS, NARRAY(PortS), getDeviceName(), "DEVICE_PORT", "I/O Port", MAIN_CONTROL_TAB, IP_RW, ISR_1OFMANY, 0, IPS_IDLE);
 
 	return true;
 }
 
-bool HiSIS::updateProperties() {
+bool HiSIS::updateProperties()
+{
+	DEBUG(INDI::Logger::DBG_DEBUG, "within HiSIS::updateProperties");
 	INDI::CCD::updateProperties();
 
 	if (isConnected())
@@ -121,6 +135,7 @@ bool HiSIS::updateProperties() {
 
 bool HiSIS::setupParams()
 {
+	DEBUG(INDI::Logger::DBG_DEBUG, "within HiSIS::setupParams");
 	return true;
 }
 

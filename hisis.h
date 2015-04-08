@@ -28,8 +28,10 @@ class HiSIS : public INDI::CCD
 		bool updateProperties();
 
 	private:
-		ITextVectorProperty PortTP;
-		IText PortT[1];
+		ISwitch ConnS[2];
+		ISwitchVectorProperty ConnSP;
+		ISwitch PortS[3];
+		ISwitchVectorProperty PortSP;
 
 		bool setupParams();
 };
