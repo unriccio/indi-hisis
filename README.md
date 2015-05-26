@@ -18,8 +18,10 @@ Compile with: `g++ $(pkg-config --libs --cflags libindi) -lindidriver hisis.cpp 
 - check features inherited from INDI::CCD
   - configuration save/restore
   - device snooping
+  - is somebody using ACTIVE_DEVICES?
 - FITS headers
 - are we abusing of DEVICE_PORT?
+- make sure of exposing standard properties http://indilib.org/develop/developer-manual/101-standard-properties.html
 
 ### (short term)
 - copy connection parameters states from http://www.indilib.org/api//Lx_8cpp_source.html
